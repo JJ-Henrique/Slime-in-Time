@@ -1,3 +1,7 @@
+# 🎮 GAMEPLAY
+
+![Gameplay](assets/gameplay.gif)
+
 # 🎮 Slime in Time
 
 Slime in Time é um jogo 2D simples que eu criei enquanto estou aprendendo programação com Python e Pygame.
