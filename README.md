@@ -40,3 +40,16 @@ O projeto ainda está em desenvolvimento, então provavelmente vou melhorar vár
 ## 🎯 Objetivo
 
 Esse projeto faz parte do meu aprendizado na área de desenvolvimento, então o foco não é ser perfeito, e sim evoluir aos poucos como programador.
+
+## 📚 O que eu aprendi
+
+Esse projeto me ajudou a entender melhor como construir um jogo completo em Python.
+
+Durante o desenvolvimento, aprendi e pratiquei:
+
+- Estrutura de um game loop
+- Organização de projetos com múltiplos arquivos
+- Programação orientada a objetos na prática
+- Controle de estados do jogo (início, jogando, game over)
+- Sistema simples de pontuação e tempo
+- Colisão entre objetos usando Pygame
