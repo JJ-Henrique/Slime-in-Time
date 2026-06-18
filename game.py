@@ -28,8 +28,63 @@ class Game:
             "assets/fonts/PressStart2P.ttf", 18)
         self.font_medium = pygame.font.Font(
             "assets/fonts/PressStart2P.ttf", 40)
+
         self.font_big = pygame.font.Font(
             "assets/fonts/PressStart2P.ttf", 100)
+
+        # parallax layers
+        self.layers = [
+            {
+                "image": pygame.transform.scale(
+                    pygame.image.load(
+                        "assets/images/background/layer_1.png"
+                    ).convert_alpha(),
+                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                ),
+                "x": 0,
+                "speed": 5
+            },
+            {
+                "image": pygame.transform.scale(
+                    pygame.image.load(
+                        "assets/images/background/layer_2.png"
+                    ).convert_alpha(),
+                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                ),
+                "x": 0,
+                "speed": 4
+            },
+            {
+                "image": pygame.transform.scale(
+                    pygame.image.load(
+                        "assets/images/background/layer_3.png"
+                    ).convert_alpha(),
+                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                ),
+                "x": 0,
+                "speed": 3
+            },
+            {
+                "image": pygame.transform.scale(
+                    pygame.image.load(
+                        "assets/images/background/layer_4.png"
+                    ).convert_alpha(),
+                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                ),
+                "x": 0,
+                "speed": 2
+            },
+            {
+                "image": pygame.transform.scale(
+                    pygame.image.load(
+                        "assets/images/background/layer_5.png"
+                    ).convert_alpha(),
+                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                ),
+                "x": 0,
+                "speed": 1
+            },
+        ]
 
         self.spawn_points = [
             (0, 0),
@@ -51,6 +106,8 @@ class Game:
         self.start_time = None
         self.last_spawn_time = 0
         self.score = 0
+        self.last_trail_time = 0  # controla a quantidde de trails
+        self.trails = []
         print("GAME STARTED")
 
         self.background = pygame.image.load(
@@ -78,6 +135,50 @@ class Game:
 
         self.player.move()
 
+        # controle total do paralaxx
+        if self.player.direction_x == 1:
+            for layer in self.layers:
+                layer["x"] -= layer["speed"]
+
+        elif self.player.direction_x == -1:
+            for layer in self.layers:
+                layer["x"] += layer["speed"]
+
+        for layer in self.layers:
+            if layer["x"] <= -SCREEN_WIDTH:
+                layer["x"] = 0
+            if layer["x"] >= SCREEN_WIDTH:
+                layer["x"] = 0
+
+        current_ticks = pygame.time.get_ticks()
+        # ATUALIZACAO ONDE posso controlar o delay pelo settings
+        if current_ticks - self.last_trail_time > TRAIL_SPAWN_DELAY:
+
+            if self.player.facing_right:
+                trail_x = self.player.x
+            else:
+                trail_x = self.player.x + self.player.width
+
+            trail_y = (
+                self.player.y
+                + self.player.height // 2
+                + random.randint(-3, 3)
+            )
+
+            self.trails.append([
+                trail_x,
+                trail_y,
+                TRAIL_LIFETIME  # atualizacao onde posso controlar o tempo de vida do rastro pelo settings
+            ])
+
+            self.last_trail_time = current_ticks
+
+            for trail in self.trails:
+                trail[2] -= 1
+                self.trails = [
+                    trail for trail in self.trails if trail[2] > 0
+                ]
+
         for enemy in self.enemies:
             enemy.chase(self.player)
             enemy.animate()
@@ -85,6 +186,7 @@ class Game:
         self.separate_enemies()
 
         current_time = time.time() - self.start_time
+
         if current_time - self.last_spawn_time >= ENEMY_SPAWN_INTERVAL:
             self.spawn_enemy()
             self.last_spawn_time = current_time
@@ -123,8 +225,37 @@ class Game:
             self.victory = True
 
     def draw(self):
+        self.screen.fill((50, 50, 50))
 
-        self.screen.blit(self.background, (0, 0))
+        for layer in reversed(self.layers):
+            self.screen.blit(layer["image"], (layer["x"], 0))
+            self.screen.blit(
+                layer["image"], (layer["x"] - SCREEN_WIDTH, 0))
+
+            self.screen.blit(
+                layer["image"],
+                (layer["x"], 0)
+            )
+            self.screen.blit(
+                layer["image"],
+                (layer["x"] + SCREEN_WIDTH, 0)
+            )
+
+        for trail in self.trails:
+            # TAMANHO DAS PARTICULAS DO RASTRO
+            # Aumente ou diminua o divisor para alterar a velocidade com que as particulas encolhem.
+            # trail[2] // 2 = particulas maiores
+            # trail[2] // 4 = tamanho medio
+            # trail[2] // 6 = particulas menores
+            # < MODIFICADO NO SETTING PARA MELHORAR EM PROJETOS FUTUROS
+            radius = max(1, trail[2] // TRAIL_SIZE)
+
+            pygame.draw.circle(
+                self.screen,
+                (91, 198, 184),
+                (int(trail[0]), int(trail[1])),
+                radius
+            )
 
         if not self.game_started:
             text = self.font_medium.render("Press an Arrow Key to Start",
@@ -178,6 +309,14 @@ class Game:
                 f"Enemies: {len(self.enemies)}", True, (255, 255, 255))
             self.screen.blit(enemy_text, (10, 90))
 
+        fps_text = self.font_small.render(
+            f"FPS: {int(self.clock.get_fps())}",
+            True,
+            (255, 255, 255)
+        )
+
+        self.screen.blit(fps_text, (10, 130))
+
         pygame.display.update()
 
     def reset_game(self):
@@ -189,6 +328,7 @@ class Game:
         self.game_started = False
         self.start_time = None
         self.score = 0
+        self.last_spawn_time = 0
 
     def run(self):
 

@@ -20,7 +20,7 @@ class Player:
         # Animation
         self.frames = []
 
-        for i in range(1, 4):
+        for i in range(1, 10):
 
             image = pygame.image.load(
                 f"assets/images/player/player_{i}.png"
@@ -31,7 +31,9 @@ class Player:
             self.frames.append(image)
 
         self.current_frame = 0
-        self.animation_speed = 0.09
+        self.animation_speed = 0.12
+        self.facing_right = True  # direcao
+        self.direction_x = 0  # info para a movimentacao dos layers
 
     def animate(self):
 
@@ -43,15 +45,19 @@ class Player:
     def move(self):
 
         keys = pygame.key.get_pressed()
-
+        self.direction_x = 0
         moving = False
 
         if keys[pygame.K_LEFT]:
             self.x -= self.speed
+            self.facing_right = False
+            self.direction_x = -1
             moving = True
 
         if keys[pygame.K_RIGHT]:
             self.x += self.speed
+            self.facing_right = True
+            self.direction_x = 1
             moving = True
 
         if keys[pygame.K_UP]:
@@ -71,7 +77,12 @@ class Player:
 
     def draw(self, screen):
 
-        screen.blit(self.frames[int(self.current_frame)], (self.x, self.y))
+        current_image = self.frames[int(self.current_frame)]
+
+        if self.facing_right:
+            current_image = pygame.transform.flip(current_image, True, False)
+
+        screen.blit(current_image, (self.x, self.y))
 
     def get_rect(self):
 

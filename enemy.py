@@ -31,7 +31,7 @@ class Enemy:
             self.frames.append(image)
 
         self.current_frame = 0
-        self.animation_speed = 0.09
+        self.animation_speed = 0.10
 
     def animate(self):
 
