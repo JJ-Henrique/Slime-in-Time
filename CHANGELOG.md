@@ -45,4 +45,4 @@
 - funcionalidade de vida i-frames e melhora na colisão
 - mudança no tamanho dos personagens
 - HUD basica de vida
--
+- sistema de knoback estilizado

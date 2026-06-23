@@ -108,6 +108,8 @@ class Game:
         self.score = 0
         self.last_trail_time = 0  # controla a quantidde de trails
         self.trails = []
+        self.shake_duration = 0
+        self.shake_intensity = 0
         print("GAME STARTED")
 
         self.background = pygame.image.load(
@@ -189,8 +191,11 @@ class Game:
 
         self.score = int(time.time() - self.start_time) * 100
 
-        self.invicible = False
+        self.invincible = False
         self.player.update_invincibility()
+
+        if self.shake_duration > 0:
+            self.shake_duration -= 1
 
     def check_collision(self):  # colisao entre player e inimigos
         if self.state != GameState.PLAYING:
@@ -198,7 +203,16 @@ class Game:
 
         for enemy in self.enemies:
             if self.player.get_rect().colliderect(enemy.get_rect()):
-                self.player.take_damage(1)
+                if self.player.take_damage(1):
+                    if self.player.x < enemy.x:
+                        self.player.knockback_x = -KNOCKBACK_FORCE
+                        enemy.x += KNOCKBACK_FORCE
+                    else:
+                        self.player.knockback_x = KNOCKBACK_FORCE
+                        enemy.x -= KNOCKBACK_FORCE
+                    self.shake_duration = 8  # controle do camera shake
+                    self.shake_intensity = 2
+                    pass
 
     def separate_enemies(self):
         for enemy in self.enemies:
@@ -237,18 +251,31 @@ class Game:
     def draw(self):
         self.screen.fill((50, 50, 50))
 
+        shake_x = 0
+        shake_y = 0
+        if self.shake_duration > 0:
+            shake_x = random.randint(
+                -self.shake_intensity,
+                self.shake_intensity
+            )
+
+            shake_y = random.randint(
+                -self.shake_intensity,
+                self.shake_intensity
+            )
+
         for layer in reversed(self.layers):
-            self.screen.blit(layer["image"], (layer["x"], 0))
+            self.screen.blit(layer["image"], (layer["x"] + shake_x, shake_y))
             self.screen.blit(
                 layer["image"], (layer["x"] - SCREEN_WIDTH, 0))
 
             self.screen.blit(
                 layer["image"],
-                (layer["x"], 0)
+                (layer["x"] + shake_x, shake_y)
             )
             self.screen.blit(
                 layer["image"],
-                (layer["x"] + SCREEN_WIDTH, 0)
+                (layer["x"] + SCREEN_WIDTH + shake_x, shake_y)
             )
 
         for trail in self.trails:

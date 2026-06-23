@@ -18,8 +18,9 @@ class Player:
 
         # Speed
         self.speed = PLAYER_SPEED
+        self.knockback_x = 0
 
-        self.max_health = 3
+        self.max_health = 6
         self.health = self.max_health
         self.invincible = False
         self.last_hit_time = 0
@@ -45,7 +46,7 @@ class Player:
     def take_damage(self, amount):
 
         if self.invincible:
-            return  # ignora o dano
+            return False  # ignora o dano
         self.health -= amount
         if self.health < 0:
             self.health = 0
@@ -54,6 +55,7 @@ class Player:
 
         self.invincible = True
         self.last_hit_time = pygame.time.get_ticks()  # registra ultimo dano
+        return True
 
     def update_invincibility(self):
 
@@ -101,6 +103,9 @@ class Player:
         self.x = max(0, min(self.x, SCREEN_WIDTH - self.width))
 
         self.y = max(0, min(self.y, SCREEN_HEIGHT - self.height))
+
+        self.x += self.knockback_x
+        self.knockback_x *= 0.8
 
     def draw(self, screen):
 
