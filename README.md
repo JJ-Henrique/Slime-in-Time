@@ -4,52 +4,95 @@
 
 ![Gameplay](assets/gameplay.gif)
 
-Slime in Time é um jogo 2D simples que eu criei enquanto estou aprendendo programação com Python e Pygame.
+Slime in Time é um jogo 2D desenvolvido com Python e Pygame como parte da minha jornada de aprendizado em desenvolvimento de software.
 
-No jogo, você controla um slime e precisa sobreviver o máximo de tempo possível enquanto foge de outros slimes fantasmas que vão aparecendo e ficando mais difíceis.
+No jogo, você controla um slime que precisa sobreviver pelo maior tempo possível enquanto foge de slimes fantasmas que aparecem gradualmente pelo mapa. Conforme o tempo passa, a dificuldade aumenta e a sobrevivência se torna cada vez mais desafiadora.
 
 ---
 
 ## 🧠 Sobre o projeto
 
-Esse projeto foi feito mais como forma de estudo e prática, então ele ainda é bem simples. A ideia principal foi entender melhor como funciona a lógica de um jogo, principalmente:
+Este projeto foi criado com foco em aprendizado prático de programação e desenvolvimento de jogos.
 
-- Como funciona o loop de um jogo
-- Movimentação de personagem
-- Colisões entre objetos
-- Organização de código em arquivos separados
+Ao longo do desenvolvimento, procuro aplicar conceitos de programação orientada a objetos, organização de código e arquitetura de sistemas simples para jogos.
+
+Além de aprender Python e Pygame, o objetivo é construir um projeto cada vez mais completo para compor meu portfólio como desenvolvedor.
 
 ---
 
-## 🕹️ O que tem no jogo
+## 🕹️ Funcionalidades atuais
 
-- Controle de um slime jogável
-- Inimigos (slimes fantasmas)
+- Menu inicial
+- Sistema de estados do jogo (Menu, Jogando, Vitória e Game Over)
+- Controle de personagem
+- Inimigos com perseguição ao jogador
+- Spawn progressivo de inimigos
 - Sistema de colisão
-- Dificuldade aumentando com o tempo
-- Jogo 2D simples feito com Pygame
+- Sistema de vida do jogador
+- Invencibilidade temporária após receber dano (I-Frames)
+- Sistema de pontuação
+- Temporizador de sobrevivência
+- Condição de vitória
+- Reinício da partida sem fechar o jogo
+- HUD com informações de vida, pontuação, tempo restante e quantidade de inimigos
+- Efeito de parallax para o cenário
+- Sistema de partículas/rastro do personagem
+- Contador de FPS para depuração
+
+---
+
+## 🛠️ Tecnologias utilizadas
+
+- Python
+- Pygame
 
 ---
 
 ## 🚧 Estado atual
 
-O projeto ainda está em desenvolvimento, então provavelmente vou melhorar várias coisas com o tempo, como gráficos, sons e novas mecânicas.
+O projeto continua em desenvolvimento.
+
+Próximas funcionalidades planejadas:
+
+- Sistema de knockback
+- Novas habilidades para o jogador
+- Efeitos sonoros
+- Música de fundo
+- Melhorias visuais
+- Novos tipos de inimigos
+- Sistema de progressão mais elaborado
 
 ---
 
 ## 🎯 Objetivo
 
-Esse projeto faz parte do meu aprendizado na área de desenvolvimento, então o foco não é ser perfeito, e sim evoluir aos poucos como programador.
+O principal objetivo deste projeto é desenvolver minhas habilidades como programador através da criação de um jogo completo.
 
-## 📚 O que eu aprendi
+Além da parte técnica, estou utilizando este projeto para praticar organização de código, resolução de problemas, depuração de erros e boas práticas de desenvolvimento.
 
-Esse projeto me ajudou a entender melhor como construir um jogo completo em Python.
+---
 
-Durante o desenvolvimento, aprendi e pratiquei:
+## 📚 O que aprendi
 
-- Estrutura de um game loop
-- Organização de projetos com múltiplos arquivos
-- Programação orientada a objetos na prática
-- Controle de estados do jogo (início, jogando, game over)
-- Sistema simples de pontuação e tempo
-- Colisão entre objetos usando Pygame
+Durante o desenvolvimento deste projeto pratiquei e aprendi conceitos importantes como:
+
+- Estrutura de Game Loop
+- Programação Orientada a Objetos (POO)
+- Organização de projetos em múltiplos arquivos
+- Controle de estados do jogo
+- Sistema de colisão utilizando Pygame
+- Gerenciamento de entidades
+- Sistema de spawn baseado em tempo
+- Manipulação de sprites e animações
+- Criação de HUDs
+- Controle de tempo com `pygame.time.get_ticks()`
+- Sistemas de vida e dano
+- Invencibilidade temporária (I-Frames)
+- Separação de responsabilidades entre classes
+- Depuração e correção de bugs
+
+---
+
+## 📌 Status
+
+Projeto ativo e em constante evolução.

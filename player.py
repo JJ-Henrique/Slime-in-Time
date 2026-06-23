@@ -1,3 +1,5 @@
+import re
+
 import pygame
 from settings import *
 
@@ -17,10 +19,15 @@ class Player:
         # Speed
         self.speed = PLAYER_SPEED
 
+        self.max_health = 3
+        self.health = self.max_health
+        self.invincible = False
+        self.last_hit_time = 0
+
         # Animation
         self.frames = []
 
-        for i in range(1, 10):
+        for i in range(1, 7):
 
             image = pygame.image.load(
                 f"assets/images/player/player_{i}.png"
@@ -34,6 +41,26 @@ class Player:
         self.animation_speed = 0.12
         self.facing_right = True  # direcao
         self.direction_x = 0  # info para a movimentacao dos layers
+
+    def take_damage(self, amount):
+
+        if self.invincible:
+            return  # ignora o dano
+        self.health -= amount
+        if self.health < 0:
+            self.health = 0
+
+        print(f"Player health: {self.health}")  # debug temporatio
+
+        self.invincible = True
+        self.last_hit_time = pygame.time.get_ticks()  # registra ultimo dano
+
+    def update_invincibility(self):
+
+        if self.invincible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_hit_time >= 1000:  # 1 second of invincibility
+                self.invincible = False
 
     def animate(self):
 

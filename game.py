@@ -5,6 +5,7 @@ import random
 from settings import *
 from player import Player
 from enemy import Enemy
+from game_state import GameState
 
 
 class Game:
@@ -100,9 +101,8 @@ class Game:
         self.spawn_enemy()
 
         self.running = True
-        self.game_over = False
-        self.victory = False
-        self.game_started = False
+        self.state = GameState.MENU
+        print(self.state)
         self.start_time = None
         self.last_spawn_time = 0
         self.score = 0
@@ -126,11 +126,7 @@ class Game:
         print(f"Total enemies: {len(self.enemies)}")
 
     def update(self):
-
-        if not self.game_started:
-            return
-
-        if self.game_over or self.victory:
+        if self.state != GameState.PLAYING:
             return
 
         self.player.move()
@@ -193,10 +189,16 @@ class Game:
 
         self.score = int(time.time() - self.start_time) * 100
 
+        self.invicible = False
+        self.player.update_invincibility()
+
     def check_collision(self):  # colisao entre player e inimigos
+        if self.state != GameState.PLAYING:
+            return
+
         for enemy in self.enemies:
             if self.player.get_rect().colliderect(enemy.get_rect()):
-                self.game_over = True
+                self.player.take_damage(1)
 
     def separate_enemies(self):
         for enemy in self.enemies:
@@ -216,13 +218,21 @@ class Game:
                         enemy.y += 2
 
     def check_win(self):
-        if not self.game_started:
+        if self.state != GameState.PLAYING:
             return
-        if self.game_over or self.victory:
-            return
+
         elapsed_time = time.time() - self.start_time
         if elapsed_time >= WIN_TIME:
-            self.victory = True
+            self.state = GameState.VICTORY
+            print(self.state)
+
+    def check_game_over(self):
+        if self.state != GameState.PLAYING:
+            return
+
+        if self.player.health <= 0:
+            self.state = GameState.GAME_OVER
+            print(self.state)
 
     def draw(self):
         self.screen.fill((50, 50, 50))
@@ -257,7 +267,7 @@ class Game:
                 radius
             )
 
-        if not self.game_started:
+        if self.state == GameState.MENU:
             text = self.font_medium.render("Press an Arrow Key to Start",
                                            True, (255, 255, 255))
             text_rect = text.get_rect(
@@ -265,13 +275,12 @@ class Game:
             )
             self.screen.blit(text, text_rect)
 
-        elif not self.game_over and not self.victory:
-
+        elif self.state == GameState.PLAYING:
             self.player.draw(self.screen)
             for enemy in self.enemies:
                 enemy.draw(self.screen)
 
-        elif self.game_over:
+        elif self.state == GameState.GAME_OVER:
 
             text = self.font_big.render("GAME OVER", True, (255, 0, 0))
             text_rect = text.get_rect(
@@ -279,14 +288,14 @@ class Game:
             )
             self.screen.blit(text, text_rect)
 
-        elif self.victory:
+        elif self.state == GameState.VICTORY:
             text = self.font_big.render("YOU WIN!", True, (0, 255, 0))
             text_rect = text.get_rect(
                 center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
             )
             self.screen.blit(text, text_rect)
 
-        if self.game_started and not self.game_over and not self.victory:  # TIMER#
+        if self.state == GameState.PLAYING:  # TIMER#
 
             font = self.font_small
 
@@ -294,28 +303,24 @@ class Game:
                 0, WIN_TIME - int(time.time() - self.start_time))
 
             timer_text = font.render(
-                f"Time Left: {remaining_time}", True, (255, 255, 255)
-            )
-
+                f"Time Left: {remaining_time}", True, (255, 255, 255))
             self.screen.blit(timer_text, (10, 10))
 
             score_text = font.render(
-                f"Score: {self.score}", True, (255, 255, 255)
-            )
-
+                f"Score: {self.score}", True, (255, 255, 255))
             self.screen.blit(score_text, (10, 50))
 
             enemy_text = font.render(  # contadr de inimigos
                 f"Enemies: {len(self.enemies)}", True, (255, 255, 255))
             self.screen.blit(enemy_text, (10, 90))
 
-        fps_text = self.font_small.render(
-            f"FPS: {int(self.clock.get_fps())}",
-            True,
-            (255, 255, 255)
-        )
+            health_text = font.render(
+                f"Health: {self.player.health}/{self.player.max_health}", True, (255, 255, 255))
+            self.screen.blit(health_text, (10, 130))
 
-        self.screen.blit(fps_text, (10, 130))
+        fps_text = self.font_small.render(
+            f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
+        self.screen.blit(fps_text, (1150, 700))
 
         pygame.display.update()
 
@@ -323,9 +328,8 @@ class Game:
         self.player = Player()
         self.enemies = []
         self.spawn_enemy()
-        self.game_over = False
-        self.victory = False
-        self.game_started = False
+        self.state = GameState.MENU
+        print(self.state)
         self.start_time = None
         self.score = 0
         self.last_spawn_time = 0
@@ -344,9 +348,9 @@ class Game:
                         pygame.K_UP,
                         pygame.K_DOWN,
                     ):
-                        if not self.game_started:
-
-                            self.game_started = True
+                        if self.state == GameState.MENU:
+                            self.state = GameState.PLAYING
+                            print(self.state)
 
                             self.start_time = time.time()
 
@@ -354,12 +358,15 @@ class Game:
 
                     if event.key == pygame.K_r:
 
-                        if self.game_over or self.victory:
-
+                        if self.state in (
+                            GameState.GAME_OVER,
+                            GameState.VICTORY
+                        ):
                             self.reset_game()
 
             self.update()
             self.check_collision()
+            self.check_game_over()
             self.check_win()
             self.draw()
             self.clock.tick(FPS)
