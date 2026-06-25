@@ -37,7 +37,7 @@ Além de aprender Python e Pygame, o objetivo é construir um projeto cada vez m
 - Efeito de parallax para o cenário
 - Sistema de partículas/rastro do personagem
 - Contador de FPS para depuração
-- - HUD completa com:
+- HUD completa com:
   - Vida
   - Barra de vida
   - Pontuação
