@@ -1,11 +1,12 @@
 import pygame
 import time
 import random
+import settings
 
-from settings import *
+import render
 from player import Player
 from enemy import Enemy
-from game_state import GameState
+import game_state
 
 
 class Game:
@@ -18,7 +19,8 @@ class Game:
         pygame.mixer.music.load("assets/sounds/music.mp3")
         pygame.mixer.music.play(-1)
 
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode(
+            (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 
         pygame.display.set_caption("Survive The Enemy")
 
@@ -40,7 +42,7 @@ class Game:
                     pygame.image.load(
                         "assets/images/background/layer_1.png"
                     ).convert_alpha(),
-                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                    (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
                 ),
                 "x": 0,
                 "speed": 5
@@ -50,7 +52,7 @@ class Game:
                     pygame.image.load(
                         "assets/images/background/layer_2.png"
                     ).convert_alpha(),
-                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                    (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
                 ),
                 "x": 0,
                 "speed": 4
@@ -60,7 +62,7 @@ class Game:
                     pygame.image.load(
                         "assets/images/background/layer_3.png"
                     ).convert_alpha(),
-                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                    (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
                 ),
                 "x": 0,
                 "speed": 3
@@ -70,7 +72,7 @@ class Game:
                     pygame.image.load(
                         "assets/images/background/layer_4.png"
                     ).convert_alpha(),
-                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                    (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
                 ),
                 "x": 0,
                 "speed": 2
@@ -80,7 +82,7 @@ class Game:
                     pygame.image.load(
                         "assets/images/background/layer_5.png"
                     ).convert_alpha(),
-                    (SCREEN_WIDTH, SCREEN_HEIGHT)
+                    (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
                 ),
                 "x": 0,
                 "speed": 1
@@ -89,9 +91,10 @@ class Game:
 
         self.spawn_points = [
             (0, 0),
-            (SCREEN_WIDTH - ENEMY_SIZE, 0),
-            (0, SCREEN_HEIGHT - ENEMY_SIZE),
-            (SCREEN_WIDTH - ENEMY_SIZE, SCREEN_HEIGHT - ENEMY_SIZE)
+            (settings.SCREEN_WIDTH - settings.ENEMY_SIZE, 0),
+            (0, settings.SCREEN_HEIGHT - settings.ENEMY_SIZE),
+            (settings.SCREEN_WIDTH - settings.ENEMY_SIZE,
+             settings.SCREEN_HEIGHT - settings.ENEMY_SIZE)
         ]
 
         self.player = Player()
@@ -101,7 +104,7 @@ class Game:
         self.spawn_enemy()
 
         self.running = True
-        self.state = GameState.MENU
+        self.state = game_state.GameState.MENU
         print(self.state)
         self.start_time = None
         self.last_spawn_time = 0
@@ -117,7 +120,7 @@ class Game:
         ).convert()
 
         self.background = pygame.transform.scale(
-            self.background, (SCREEN_WIDTH, SCREEN_HEIGHT)
+            self.background, (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
         )
 
     def spawn_enemy(self):  # spawn de inimigos em intervalos
@@ -128,7 +131,7 @@ class Game:
         print(f"Total enemies: {len(self.enemies)}")
 
     def update(self):
-        if self.state != GameState.PLAYING:
+        if self.state != game_state.GameState.PLAYING:
             return
 
         self.player.move()
@@ -143,14 +146,14 @@ class Game:
                 layer["x"] += layer["speed"]
 
         for layer in self.layers:
-            if layer["x"] <= -SCREEN_WIDTH:
+            if layer["x"] <= -settings.SCREEN_WIDTH:
                 layer["x"] = 0
-            if layer["x"] >= SCREEN_WIDTH:
+            if layer["x"] >= settings.SCREEN_WIDTH:
                 layer["x"] = 0
 
         current_ticks = pygame.time.get_ticks()
         # ATUALIZACAO ONDE posso controlar o delay pelo settings
-        if current_ticks - self.last_trail_time > TRAIL_SPAWN_DELAY:
+        if current_ticks - self.last_trail_time > settings.TRAIL_SPAWN_DELAY:
 
             if self.player.facing_right:
                 trail_x = self.player.x
@@ -166,7 +169,8 @@ class Game:
             self.trails.append([
                 trail_x,
                 trail_y,
-                TRAIL_LIFETIME  # atualizacao onde posso controlar o tempo de vida do rastro pelo settings
+                # atualizacao onde posso controlar o tempo de vida do rastro pelo settings
+                settings.TRAIL_LIFETIME
             ])
 
             self.last_trail_time = current_ticks
@@ -185,7 +189,7 @@ class Game:
 
         current_time = time.time() - self.start_time
 
-        if current_time - self.last_spawn_time >= ENEMY_SPAWN_INTERVAL:
+        if current_time - self.last_spawn_time >= settings.ENEMY_SPAWN_INTERVAL:
             self.spawn_enemy()
             self.last_spawn_time = current_time
 
@@ -198,18 +202,18 @@ class Game:
             self.shake_duration -= 1
 
     def check_collision(self):  # colisao entre player e inimigos
-        if self.state != GameState.PLAYING:
+        if self.state != game_state.GameState.PLAYING:
             return
 
         for enemy in self.enemies:
             if self.player.get_rect().colliderect(enemy.get_rect()):
                 if self.player.take_damage(1):
                     if self.player.x < enemy.x:
-                        self.player.knockback_x = -KNOCKBACK_FORCE
-                        enemy.x += KNOCKBACK_FORCE
+                        self.player.knockback_x = -settings.KNOCKBACK_FORCE
+                        enemy.x += settings.KNOCKBACK_FORCE
                     else:
-                        self.player.knockback_x = KNOCKBACK_FORCE
-                        enemy.x -= KNOCKBACK_FORCE
+                        self.player.knockback_x = settings.KNOCKBACK_FORCE
+                        enemy.x -= settings.KNOCKBACK_FORCE
                     self.shake_duration = 8  # controle do camera shake
                     self.shake_intensity = 2
                     pass
@@ -232,130 +236,30 @@ class Game:
                         enemy.y += 2
 
     def check_win(self):
-        if self.state != GameState.PLAYING:
+        if self.state != game_state.GameState.PLAYING:
             return
 
         elapsed_time = time.time() - self.start_time
-        if elapsed_time >= WIN_TIME:
-            self.state = GameState.VICTORY
+        if elapsed_time >= settings.WIN_TIME:
+            self.state = game_state.GameState.VICTORY
             print(self.state)
 
     def check_game_over(self):
-        if self.state != GameState.PLAYING:
+        if self.state != game_state.GameState.PLAYING:
             return
 
         if self.player.health <= 0:
-            self.state = GameState.GAME_OVER
+            self.state = game_state.GameState.GAME_OVER
             print(self.state)
 
     def draw(self):
-        self.screen.fill((50, 50, 50))
-
-        shake_x = 0
-        shake_y = 0
-        if self.shake_duration > 0:
-            shake_x = random.randint(
-                -self.shake_intensity,
-                self.shake_intensity
-            )
-
-            shake_y = random.randint(
-                -self.shake_intensity,
-                self.shake_intensity
-            )
-
-        for layer in reversed(self.layers):
-            self.screen.blit(layer["image"], (layer["x"] + shake_x, shake_y))
-            self.screen.blit(
-                layer["image"], (layer["x"] - SCREEN_WIDTH, 0))
-
-            self.screen.blit(
-                layer["image"],
-                (layer["x"] + shake_x, shake_y)
-            )
-            self.screen.blit(
-                layer["image"],
-                (layer["x"] + SCREEN_WIDTH + shake_x, shake_y)
-            )
-
-        for trail in self.trails:
-            # TAMANHO DAS PARTICULAS DO RASTRO
-            # Aumente ou diminua o divisor para alterar a velocidade com que as particulas encolhem.
-            # trail[2] // 2 = particulas maiores
-            # trail[2] // 4 = tamanho medio
-            # trail[2] // 6 = particulas menores
-            # < MODIFICADO NO SETTING PARA MELHORAR EM PROJETOS FUTUROS
-            radius = max(1, trail[2] // TRAIL_SIZE)
-
-            pygame.draw.circle(
-                self.screen,
-                (91, 198, 184),
-                (int(trail[0]), int(trail[1])),
-                radius
-            )
-
-        if self.state == GameState.MENU:
-            text = self.font_medium.render("Press an Arrow Key to Start",
-                                           True, (255, 255, 255))
-            text_rect = text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-            )
-            self.screen.blit(text, text_rect)
-
-        elif self.state == GameState.PLAYING:
-            self.player.draw(self.screen)
-            for enemy in self.enemies:
-                enemy.draw(self.screen)
-
-        elif self.state == GameState.GAME_OVER:
-
-            text = self.font_big.render("GAME OVER", True, (255, 0, 0))
-            text_rect = text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-            )
-            self.screen.blit(text, text_rect)
-
-        elif self.state == GameState.VICTORY:
-            text = self.font_big.render("YOU WIN!", True, (0, 255, 0))
-            text_rect = text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-            )
-            self.screen.blit(text, text_rect)
-
-        if self.state == GameState.PLAYING:  # TIMER#
-
-            font = self.font_small
-
-            remaining_time = max(
-                0, WIN_TIME - int(time.time() - self.start_time))
-
-            timer_text = font.render(
-                f"Time Left: {remaining_time}", True, (255, 255, 255))
-            self.screen.blit(timer_text, (10, 10))
-
-            score_text = font.render(
-                f"Score: {self.score}", True, (255, 255, 255))
-            self.screen.blit(score_text, (10, 50))
-
-            enemy_text = font.render(  # contadr de inimigos
-                f"Enemies: {len(self.enemies)}", True, (255, 255, 255))
-            self.screen.blit(enemy_text, (10, 90))
-
-            health_text = font.render(
-                f"Health: {self.player.health}/{self.player.max_health}", True, (255, 255, 255))
-            self.screen.blit(health_text, (10, 130))
-
-        fps_text = self.font_small.render(
-            f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
-        self.screen.blit(fps_text, (1150, 700))
-
-        pygame.display.update()
+        render.draw(self)
 
     def reset_game(self):
         self.player = Player()
         self.enemies = []
         self.spawn_enemy()
-        self.state = GameState.MENU
+        self.state = game_state.GameState.MENU
         print(self.state)
         self.start_time = None
         self.score = 0
@@ -375,8 +279,8 @@ class Game:
                         pygame.K_UP,
                         pygame.K_DOWN,
                     ):
-                        if self.state == GameState.MENU:
-                            self.state = GameState.PLAYING
+                        if self.state == game_state.GameState.MENU:
+                            self.state = game_state.GameState.PLAYING
                             print(self.state)
 
                             self.start_time = time.time()
@@ -386,8 +290,8 @@ class Game:
                     if event.key == pygame.K_r:
 
                         if self.state in (
-                            GameState.GAME_OVER,
-                            GameState.VICTORY
+                            game_state.GameState.GAME_OVER,
+                            game_state.GameState.VICTORY
                         ):
                             self.reset_game()
 
@@ -396,6 +300,6 @@ class Game:
             self.check_game_over()
             self.check_win()
             self.draw()
-            self.clock.tick(FPS)
+            self.clock.tick(settings.FPS)
 
     pygame.quit()

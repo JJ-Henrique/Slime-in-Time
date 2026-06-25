@@ -46,3 +46,29 @@
 - mudança no tamanho dos personagens
 - HUD basica de vida
 - sistema de knoback estilizado
+
+## [0.1.5] - 2026-06-23
+
+### Adicionado
+
+- Barra de vida visual preparada para implementação.
+- Configurações da barra de vida centralizadas no `settings.py`.
+- Novo módulo `render.py` para centralizar toda a renderização do jogo.
+
+### Refatorado
+
+- Sistema completo de renderização separado do `game.py`.
+- Renderização organizada em funções específicas:
+  - `draw_background()`
+  - `draw_trails()`
+  - `draw_game_state()`
+  - `draw_hud()`
+- Camera Shake integrado ao sistema de renderização.
+- HUD reorganizada para facilitar futuras expansões.
+- Código do `draw()` simplificado, tornando a leitura e manutenção mais fáceis.
+
+### Melhorado
+
+- Organização geral do projeto.
+- Separação de responsabilidades entre lógica do jogo e renderização.
+- Estrutura preparada para futuras habilidades, efeitos visuais e expansão do projeto.

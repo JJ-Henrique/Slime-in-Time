@@ -34,10 +34,18 @@ Além de aprender Python e Pygame, o objetivo é construir um projeto cada vez m
 - Temporizador de sobrevivência
 - Condição de vitória
 - Reinício da partida sem fechar o jogo
-- HUD com informações de vida, pontuação, tempo restante e quantidade de inimigos
 - Efeito de parallax para o cenário
 - Sistema de partículas/rastro do personagem
 - Contador de FPS para depuração
+- - HUD completa com:
+  - Vida
+  - Barra de vida
+  - Pontuação
+  - Tempo restante
+  - Quantidade de inimigos
+  - FPS
+- Sistema de Camera Shake ao receber dano
+- Sistema de Knockback suave
 
 ---
 
@@ -54,13 +62,14 @@ O projeto continua em desenvolvimento.
 
 Próximas funcionalidades planejadas:
 
-- Sistema de knockback
-- Novas habilidades para o jogador
-- Efeitos sonoros
+- Escudo expansível
+- Sistema de habilidades
+- Bomba temporizada
+- Melhorias na barra de vida
+- Sons e efeitos sonoros
 - Música de fundo
-- Melhorias visuais
 - Novos tipos de inimigos
-- Sistema de progressão mais elaborado
+- Melhorias visuais
 
 ---
 
@@ -90,6 +99,11 @@ Durante o desenvolvimento deste projeto pratiquei e aprendi conceitos importante
 - Invencibilidade temporária (I-Frames)
 - Separação de responsabilidades entre classes
 - Depuração e correção de bugs
+- Refatoração de código sem alterar o comportamento do jogo
+- Organização da renderização em módulos especializados
+- Arquitetura baseada em responsabilidades
+- Separação entre lógica do jogo e renderização
+- Estruturação de código para facilitar manutenção e expansão
 
 ---
 
