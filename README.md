@@ -12,11 +12,8 @@ No jogo, você controla um slime que precisa sobreviver pelo maior tempo possív
 
 ## 🧠 Sobre o projeto
 
-Este projeto foi criado com foco em aprendizado prático de programação e desenvolvimento de jogos.
-
-Ao longo do desenvolvimento, procuro aplicar conceitos de programação orientada a objetos, organização de código e arquitetura de sistemas simples para jogos.
-
-Além de aprender Python e Pygame, o objetivo é construir um projeto cada vez mais completo para compor meu portfólio como desenvolvedor.
+Estou aprendendo engenharia de software através do desenvolvimento de um jogo.
+Durante o desenvolvimento, procuro não apenas adicionar novas mecânicas, mas também evoluir a arquitetura do projeto. Sempre que possível, novas funcionalidades são implementadas seguindo princípios como separação de responsabilidades, reutilização de código e organização modular, tornando o projeto mais escalável e fácil de manter.
 
 ---
 
@@ -46,6 +43,9 @@ Além de aprender Python e Pygame, o objetivo é construir um projeto cada vez m
   - FPS
 - Sistema de Camera Shake ao receber dano
 - Sistema de Knockback suave
+- Sistema de renderização modular (Render Module)
+- Barra de vida animada utilizando interpolação linear (LERP)
+- Sistema de utilidades reutilizáveis (`utils.py`)
 
 ---
 
@@ -62,14 +62,14 @@ O projeto continua em desenvolvimento.
 
 Próximas funcionalidades planejadas:
 
-- Escudo expansível
-- Sistema de habilidades
+- Arquitetura do sistema de habilidades
+- Escudo expansível com animações suaves
+- Sistema de cooldown para habilidades
 - Bomba temporizada
-- Melhorias na barra de vida
 - Sons e efeitos sonoros
 - Música de fundo
 - Novos tipos de inimigos
-- Melhorias visuais
+- Melhorias visuais e efeitos (Game Feel)
 
 ---
 
@@ -80,6 +80,22 @@ O principal objetivo deste projeto é desenvolver minhas habilidades como progra
 Além da parte técnica, estou utilizando este projeto para praticar organização de código, resolução de problemas, depuração de erros e boas práticas de desenvolvimento.
 
 ---
+
+## 🏗️ Filosofia de Desenvolvimento
+
+Este projeto não tem como objetivo apenas criar um jogo.
+
+Cada funcionalidade é utilizada como oportunidade para estudar conceitos importantes de engenharia de software, como:
+
+- Programação Orientada a Objetos
+- Refatoração
+- Arquitetura de Software
+- Organização Modular
+- Separação de Responsabilidades
+- Reutilização de Código
+- Escalabilidade
+
+Por esse motivo, muitas implementações são planejadas antes de serem codificadas, priorizando entendimento e qualidade da arquitetura em vez da velocidade de desenvolvimento.
 
 ## 📚 O que aprendi
 
@@ -104,6 +120,13 @@ Durante o desenvolvimento deste projeto pratiquei e aprendi conceitos importante
 - Arquitetura baseada em responsabilidades
 - Separação entre lógica do jogo e renderização
 - Estruturação de código para facilitar manutenção e expansão
+- Criação de módulos utilitários reutilizáveis
+- Interpolação Linear (LERP) para animações suaves
+- Separação entre estado lógico e estado visual
+- Arquitetura modular aplicada ao desenvolvimento de jogos
+- Redução de acoplamento entre classes
+- Organização baseada em responsabilidades
+- Evolução incremental da arquitetura sem alterar o comportamento do jogo
 
 ---
 

@@ -5,8 +5,7 @@ from game_state import GameState
 import time
 
 
-# layers/backgrounds
-def draw_background(game):
+def draw_background(game):  # layers/backgrounds
     shake_x = 0
     shake_y = 0
     if game.shake_duration > 0:
@@ -34,10 +33,8 @@ def draw_background(game):
             (layer["x"] + SCREEN_WIDTH + shake_x, shake_y)
         )
 
-# desenha personagens e inimigos alem de controlar o state
 
-
-def draw_game_state(game):
+def draw_game_state(game):  # desenha personagens e inimigos alem de controlar o state
     if game.state == GameState.MENU:  # controla o draw de player e enemies
         text = game.font_medium.render(
             "Press an Arrow Key to Start", True, WHITE)
@@ -65,18 +62,16 @@ def draw_game_state(game):
         )
         game.screen.blit(text, text_rect)
 
-# desenha a hud
 
-
-def draw_hud(game):
+def draw_hud(game):  # desenha a hud
     if game.state == GameState.PLAYING:  # TIMER#
         font = game.font_small
 
         remaining_time = max(
             0, WIN_TIME - int(time.time() - game.start_time))
-        enemy_text = font.render(  # contadr de inimigos
-            f"Enemies: {len(game.enemies)}", True, WHITE)
-        game.screen.blit(enemy_text, (10, 90))
+        # enemy_text = font.render(  # contadr de inimigos
+        #     f"Enemies: {len(game.enemies)}", True, WHITE)
+        # game.screen.blit(enemy_text, (10, 90))
 
         fps_text = game.font_small.render(
             f"FPS: {int(game.clock.get_fps())}", True, WHITE)
@@ -92,18 +87,23 @@ def draw_hud(game):
 
         health_text = font.render(  # vida
             f"Health: {game.player.health}/{game.player.max_health}", True, WHITE)
-        game.screen.blit(health_text, (10, 130))
+        game.screen.blit(health_text, (10, 700))
 
         health_percent = (
-            game.player.health / game.player.max_health
+            game.player.display_health / game.player.max_health
         )
 
-       # a partir daqui sera feita a implementacao da barra de vida fill_width = HEALTH_BAR_WIDTH * health_percent
+       # a partir daqui sera feita a implementacao da barra de vida
+        health_bar_width = HEALTH_BAR_WIDTH * health_percent
+        pygame.draw.rect(game.screen, DARK_RED, (HEALTH_BAR_X,
+                         HEALTH_BAR_Y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT))
+        pygame.draw.rect(game.screen, GREEN, (HEALTH_BAR_X,
+                         HEALTH_BAR_Y, health_bar_width, HEALTH_BAR_HEIGHT))
+        pygame.draw.rect(game.screen, DARK_RED, (HEALTH_BAR_X,
+                         HEALTH_BAR_Y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT), 3)
 
-# desenha trails
 
-
-def draw_trails(game):
+def draw_trails(game):  # desenha trails
 
     for trail in game.trails:
 
@@ -117,10 +117,7 @@ def draw_trails(game):
         )
 
 
-# controla todo o draw
-
-
-def draw(game):
+def draw(game):  # controla todo o draw
     game.screen.fill((50, 50, 50))
     draw_background(game)
     draw_trails(game)

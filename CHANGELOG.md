@@ -1,16 +1,16 @@
-### [0.1.0] - 2026-06-15
+## [0.1.0] - 2026-06-15
 
 - Player movimentável
 - Sistema de colisão
 - Sistema de vitória e derrota
 
-### [0.1.1] - 2026-06-16
+## [0.1.1] - 2026-06-16
 
 - Adicionado spawn dinâmico de inimigos
 - Adicionado contador de score
 - Adicionado timer de sobrevivência
 
-### [0.1.2]
+## [0.1.2]
 
 - Adicionado sistema de partículas
 - Adicionado animação com 9 sprites
@@ -72,3 +72,33 @@
 - Organização geral do projeto.
 - Separação de responsabilidades entre lógica do jogo e renderização.
 - Estrutura preparada para futuras habilidades, efeitos visuais e expansão do projeto.
+
+## [0.1.6] - 2026-06-27
+
+### Adicionado
+
+- Barra de vida visual totalmente funcional.
+- Animação suave da barra de vida utilizando Interpolação Linear (LERP).
+- Novo módulo `utils.py` para centralizar funções utilitárias reutilizáveis.
+- Primeira função utilitária do projeto: `lerp()`.
+- Novo estado visual `display_health`, separado da vida real do jogador.
+- Estrutura inicial do sistema de habilidades com a criação da pasta `skills/`.
+
+### Refatorado
+
+- Sistema de atualização do `Player` reorganizado através do método `Player.update()`.
+- Atualização da invencibilidade integrada ao fluxo de atualização do jogador.
+- Sistema preparado para futuras atualizações do Player sem aumentar o acoplamento com o `Game`.
+- Organização da HUD simplificada, incorporando a barra de vida ao próprio sistema de interface.
+
+### Melhorado
+
+- Separação entre estado lógico (`health`) e representação visual (`display_health`), permitindo animações independentes da lógica do jogo.
+- Arquitetura preparada para reutilização da interpolação em futuras habilidades, barras e efeitos visuais.
+- Organização do projeto visando maior escalabilidade para o futuro sistema de habilidades.
+- Estrutura do código mais modular, reduzindo dependências entre classes.
+
+### Corrigido
+
+- Removido código morto relacionado ao sistema de invencibilidade durante a refatoração do `Player`.
+- Ajustes na posição e renderização da barra de vida na HUD.

@@ -2,6 +2,7 @@ import re
 
 import pygame
 from settings import *
+from utils import *
 
 
 class Player:
@@ -22,6 +23,7 @@ class Player:
 
         self.max_health = 6
         self.health = self.max_health
+        self.display_health = self.max_health
         self.invincible = False
         self.last_hit_time = 0
 
@@ -42,34 +44,6 @@ class Player:
         self.animation_speed = 0.12
         self.facing_right = True  # direcao
         self.direction_x = 0  # info para a movimentacao dos layers
-
-    def take_damage(self, amount):
-
-        if self.invincible:
-            return False  # ignora o dano
-        self.health -= amount
-        if self.health < 0:
-            self.health = 0
-
-        print(f"Player health: {self.health}")  # debug temporatio
-
-        self.invincible = True
-        self.last_hit_time = pygame.time.get_ticks()  # registra ultimo dano
-        return True
-
-    def update_invincibility(self):
-
-        if self.invincible:
-            current_time = pygame.time.get_ticks()
-            if current_time - self.last_hit_time >= 1000:  # 1 second of invincibility
-                self.invincible = False
-
-    def animate(self):
-
-        self.current_frame += self.animation_speed
-
-        if self.current_frame >= len(self.frames):
-            self.current_frame = 0
 
     def move(self):
 
@@ -115,6 +89,44 @@ class Player:
             current_image = pygame.transform.flip(current_image, True, False)
 
         screen.blit(current_image, (self.x, self.y))
+
+    def take_damage(self, amount):
+
+        if self.invincible:
+            return False  # ignora o dano
+        self.health -= amount
+        if self.health < 0:
+            self.health = 0
+
+        print(f"Player health: {self.health}")  # debug temporatio
+
+        self.invincible = True
+        self.last_hit_time = pygame.time.get_ticks()  # registra ultimo dano
+        return True
+
+    def update_invincibility(self):
+
+        if self.invincible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_hit_time >= 1000:  # 1 second of invincibility
+                self.invincible = False
+
+    def update_display_health(self):
+        self.display_health = lerp(
+            self.display_health,
+            self.health,
+            HEALTH_LERP_SPEED
+        )
+
+    def update(self):
+        self.update_invincibility()  # para o acoplamento no game.py no def_update
+        self.update_display_health()
+
+    def animate(self):
+        self.current_frame += self.animation_speed
+
+        if self.current_frame >= len(self.frames):
+            self.current_frame = 0
 
     def get_rect(self):
 

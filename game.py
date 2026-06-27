@@ -135,6 +135,7 @@ class Game:
             return
 
         self.player.move()
+        self.player.update()  # acoplamento de duas classes
 
         # controle total do paralaxx
         if self.player.direction_x == 1:
@@ -194,9 +195,6 @@ class Game:
             self.last_spawn_time = current_time
 
         self.score = int(time.time() - self.start_time) * 100
-
-        self.invincible = False
-        self.player.update_invincibility()
 
         if self.shake_duration > 0:
             self.shake_duration -= 1
