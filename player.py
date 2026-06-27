@@ -1,8 +1,7 @@
-import re
-
 import pygame
 from settings import *
 from utils import *
+from skills.shield import Shield
 
 
 class Player:
@@ -27,6 +26,8 @@ class Player:
         self.invincible = False
         self.last_hit_time = 0
 
+        self.shield = Shield()
+
         # Animation
         self.frames = []
 
@@ -45,8 +46,7 @@ class Player:
         self.facing_right = True  # direcao
         self.direction_x = 0  # info para a movimentacao dos layers
 
-    def move(self):
-
+    def move(self):  # movimentacao
         keys = pygame.key.get_pressed()
         self.direction_x = 0
         moving = False
@@ -81,6 +81,9 @@ class Player:
         self.x += self.knockback_x
         self.knockback_x *= 0.8
 
+        if keys[pygame.K_q]:  # controla a ativacao do shield
+            self.shield.activate()
+
     def draw(self, screen):
 
         current_image = self.frames[int(self.current_frame)]
@@ -88,12 +91,17 @@ class Player:
         if self.facing_right:
             current_image = pygame.transform.flip(current_image, True, False)
 
+        self.shield.draw(screen, self)
         screen.blit(current_image, (self.x, self.y))
 
     def take_damage(self, amount):
 
         if self.invincible:
             return False  # ignora o dano
+
+        if self.shield.is_active():
+            return False  # escudo ligado
+
         self.health -= amount
         if self.health < 0:
             self.health = 0
@@ -121,6 +129,7 @@ class Player:
     def update(self):
         self.update_invincibility()  # para o acoplamento no game.py no def_update
         self.update_display_health()
+        self.shield.update()
 
     def animate(self):
         self.current_frame += self.animation_speed

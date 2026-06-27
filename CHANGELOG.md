@@ -102,3 +102,49 @@
 
 - Removido código morto relacionado ao sistema de invencibilidade durante a refatoração do `Player`.
 - Ajustes na posição e renderização da barra de vida na HUD.
+
+## [0.1.7] - 2026-06-27/2
+
+### Adicionado
+
+- Primeira versão funcional da habilidade Shield.
+- Sistema de estados do Shield:
+- INACTIVE
+- EXPANDING
+- ACTIVE
+- SHRINKING
+- COOLDOWN (estrutura inicial)
+- Sistema de expansão e retração suave utilizando Interpolação Linear (LERP).
+- Sistema de colisão circular independente da hitbox do jogador.
+- Inimigos agora podem ser destruídos ao entrar em contato com o Shield ativo.
+- Sistema de renderização do Shield utilizando pygame.Surface com transparência (SRCALPHA).
+- Renderização em camadas composta por:
+- Glow externo;
+- Preenchimento interno;
+- Borda principal.
+- Estrutura inicial do efeito de pulso do Shield (pulse_offset).
+
+### Refatorado
+
+- Sistema de remoção de inimigos reorganizado através do método cleanup_enemies().
+- Renderização do Shield separada em múltiplas camadas, facilitando futuras melhorias visuais.
+- Código do método draw() reorganizado utilizando variáveis intermediárias como:
+- center
+- diameter
+- render_radius
+
+### Melhorado
+
+- Separação entre lógica do Shield e seus efeitos visuais.
+- Estrutura preparada para futuras animações como:
+- Pulso contínuo;
+- Múltiplas camadas de Glow;
+- Partículas;
+- Faíscas;
+- Outros efeitos visuais.
+- Organização do código visando facilitar manutenção e expansão do sistema de habilidades.
+
+### Corrigido
+
+- Ajustado o tamanho da superfície de renderização para evitar cortes no efeito de Glow.
+- Melhor alinhamento do Shield durante a renderização.

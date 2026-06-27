@@ -186,6 +186,7 @@ class Game:
             enemy.chase(self.player)
             enemy.animate()
 
+        self.cleanup_enemies()
         self.separate_enemies()
 
         current_time = time.time() - self.start_time
@@ -204,7 +205,11 @@ class Game:
             return
 
         for enemy in self.enemies:
-            if self.player.get_rect().colliderect(enemy.get_rect()):
+            if self.player.shield.collides_with(enemy, self.player):
+                if self.player.shield.is_active():
+                    print("shield acertou")
+                    enemy.alive = False
+                    continue
                 if self.player.take_damage(1):
                     if self.player.x < enemy.x:
                         self.player.knockback_x = -settings.KNOCKBACK_FORCE
@@ -232,6 +237,12 @@ class Game:
                         enemy.y -= 2
                     else:
                         enemy.y += 2
+
+    def cleanup_enemies(self):
+        self.enemies = [
+            enemy for enemy in self.enemies
+            if enemy.alive
+        ]
 
     def check_win(self):
         if self.state != game_state.GameState.PLAYING:

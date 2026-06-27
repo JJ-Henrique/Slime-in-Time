@@ -17,6 +17,8 @@ class Enemy:
         # Movement speed
         self.speed = ENEMY_SPEED
 
+        self.alive = True  # estado apos colisao com shield
+
         # Sprite
         self.frames = []
 
